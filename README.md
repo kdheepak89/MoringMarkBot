@@ -1,3 +1,7 @@
 # MoringMarkBot
 
-Reads posts from Tumblr and posts to Reddit /r/GravityFalls
+A bot that submits posts from MoringMark to reddit
+
+# Contribution
+
+Feel free to help improve this bot
