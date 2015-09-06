@@ -2,14 +2,16 @@
 Reddit-Tumblr bot
 """
 
-import json
-import praw
-import time
 from HTMLParser import HTMLParser
 from pytz import timezone
-import pytumblr
+
 import datetime
+import json
+import os
+import praw
+import pytumblr
 import random
+import time
 import traceback
 
 
