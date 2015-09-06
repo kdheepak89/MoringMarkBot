@@ -178,14 +178,23 @@ class MoringMarkBot(object):
                 raise
 
 
-
+def get_from_environ(key):
+    try:
+        return os.environ[key]
+    except:
+        raise
 
 def main():
 
-    config_path = 'moringmarkbot.conf'
+    config_path = 'moringmarkbot.conf.example'
 
     with open(config_path) as config_file:
         config = json.load(config_file)
+
+    for key in config:
+        if config[key] == '':
+            print('Getting from environment')
+            config[key] = get_from_environ(key)
 
     moringmarkbot = MoringMarkBot(**config)
 
