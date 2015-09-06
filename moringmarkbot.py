@@ -101,8 +101,11 @@ class MoringMarkBot(object):
             title_date_format = '[%B %d]'
             post_time = '['+str(self.config['month_dict'][str(month_str)]) + ' ' + str(day_str) + ']'
 
-            post_title = dictionary['caption']
-            post_title = strip_tags(post_title)
+            try:
+                post_title = dictionary['caption']
+                post_title = strip_tags(post_title)
+            except:
+                post_title = ''
 
             tags = dictionary['tags']
 
@@ -193,7 +196,10 @@ def main():
             new_post = moringmarkbot.get_new_post()
 
             if new_post:
+                print('We have a new post here!')
                 moringmarkbot.submit(**new_post)
+            else:
+                print('Post already submitted')
 
         except Exception:
             raise
