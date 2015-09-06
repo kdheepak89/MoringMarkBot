@@ -140,7 +140,6 @@ class MoringMarkBot(object):
                 print "\n"
                 print "[ERROR]:", e
                 print "\n"
-                ArithmeticError#blindly handling any exception that gets thrown
                 raise
             except Exception, e:
                 print "\n"
@@ -170,7 +169,6 @@ class MoringMarkBot(object):
                 print "\n"
                 print "[ERROR]:", e
                 print "\n"
-                ArithmeticError#blindly handling any exception that gets thrown
                 raise
             except Exception, e:
                 print "\n"
