@@ -126,67 +126,48 @@ class MoringMarkBot(object):
         else:
             return(False)
 
-    def submit(self, url, tags, post_title, post_time):
+    def submit_to(self, subreddit, url, tags, post_title, post_time):
+        try:
+            submission_object = self.reddit.submit(subreddit,
+                                        '[MoringMark] '+str(post_time)+' '+post_title,
+                                        url=str(url),
+                                        text=None,
+                                        captcha=None,
+                                        save=False,
+                                        send_replies=False)
+
+            if self.is_post_about('spoiler', tags):
+                submission_object.mark_as_nsfw()
+        except praw.errors.AlreadySubmitted, e:
+            logging.info('Error occurred')
+            logging.info("Post already submitted")
+            pass
+        except praw.errors.APIException, e:
+            logging.error("\n")
+            logging.error("[ERROR]:", e)
+            logging.error("\n")
+            raise
+        except Exception, e:
+            logging.error("\n")
+            logging.error("[ERROR]:", e)
+            logging.error("blindly handling any error")
+            logging.error("\n")
+            raise
+
+
+    def submit(self, url, tags, post_title, post_time, test_subreddit=None):
         RICK_AND_MORTY = False
         GRAVITY_FALLS = False
         SPOILER = False
 
-        if self.is_post_about('rick and morty', tags):
-            try:
-                submission_object = self.reddit.submit('RickAndMorty',
-                                            '[MoringMark] '+str(post_time)+' '+post_title,
-                                            url=str(url),
-                                            text=None,
-                                            captcha=None,
-                                            save=False,
-                                            send_replies=False)
+        if test_subreddit:
+            self.submit_to(test_subreddit, url, tags, post_title, post_time)
 
-                if self.is_post_about('spoiler', tags):
-                    submission_object.mark_as_nsfw()
-            except praw.errors.AlreadySubmitted, e:
-                logging.info('Error occurred')
-                logging.info("Post already submitted")
-                pass
-            except praw.errors.APIException, e:
-                logging.error("\n")
-                logging.error("[ERROR]:", e)
-                logging.error("\n")
-                raise
-            except Exception, e:
-                logging.error("\n")
-                logging.error("[ERROR]:", e)
-                logging.error("blindly handling any error")
-                logging.error("\n")
-                raise
+        if self.is_post_about('rick and morty', tags):
+            self.submit_to('RickAndMorty', url, tags, post_title, post_time)
 
         if self.is_post_about('gravity falls', tags):
-            try:
-                submission_object = self.reddit.submit('GravityFalls',
-                                            '[MoringMark] '+str(post_time)+' '+post_title,
-                                            url=str(url),
-                                            text=None,
-                                            captcha=None,
-                                            save=False,
-                                            send_replies=False)
-
-                if self.is_post_about('spoiler', tags):
-                    submission_object.mark_as_nsfw()
-
-            except praw.errors.AlreadySubmitted, e:
-                logging.info('Error occurred')
-                logging.info("Post already submitted")
-                pass
-            except praw.errors.APIException, e:
-                logging.error("\n")
-                logging.error("[ERROR]:", e)
-                logging.error("\n")
-                raise
-            except Exception, e:
-                logging.error("\n")
-                logging.error("[ERROR]:", e)
-                logging.error("blindly handling any error")
-                logging.error("\n")
-                raise
+            self.submit_to('GravityFalls', url, tags, post_title, post_time)
 
 
 def get_from_environ(key):
