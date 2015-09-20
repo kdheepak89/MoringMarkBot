@@ -186,6 +186,7 @@ def get_from_environ(key):
 
 def main():
 
+    print('Starting MoringMarkBot')
     config_path = 'moringmarkbot.conf.example'
 
     with open(config_path) as config_file:
