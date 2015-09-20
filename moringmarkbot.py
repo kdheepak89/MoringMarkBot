@@ -13,6 +13,17 @@ import pytumblr
 import random
 import time
 import traceback
+import logging
+import sys
+
+root = logging.getLogger()
+root.setLevel(logging.INFO)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+root.addHandler(ch)
 
 
 class MLStripper(HTMLParser):
@@ -44,7 +55,7 @@ class MoringMarkBot(object):
 
         self.config = kwargs
 
-        print('Initializing')
+        logging.info('Initializing')
         self.reddit = praw.Reddit(user_agent=self.config['user_agent'])
 
         self.tumblr = pytumblr.TumblrRestClient(
@@ -59,10 +70,10 @@ class MoringMarkBot(object):
     def login(self, REDDIT_USERNAME, REDDIT_PASSWORD):
         """Logs into Reddit and Tumblr"""
 
-        print('Login to reddit')
+        logging.info('Login to reddit')
         self.reddit.login(REDDIT_USERNAME, REDDIT_PASSWORD, disable_warning=True)
 
-        print('Login to tumblr')
+        logging.info('Login to tumblr')
         pass
 
     def is_new_post_exists(self):
@@ -133,19 +144,19 @@ class MoringMarkBot(object):
                 if self.is_post_about('spoiler', tags):
                     submission_object.mark_as_nsfw()
             except praw.errors.AlreadySubmitted, e:
-                print('Error occurred')
-                print("Post already submitted")
+                logging.info('Error occurred')
+                logging.info("Post already submitted")
                 pass
             except praw.errors.APIException, e:
-                print "\n"
-                print "[ERROR]:", e
-                print "\n"
+                logging.error("\n")
+                logging.error("[ERROR]:", e)
+                logging.error("\n")
                 raise
             except Exception, e:
-                print "\n"
-                print "[ERROR]:", e
-                print "blindly handling any error"
-                print "\n"
+                logging.error("\n")
+                logging.error("[ERROR]:", e)
+                logging.error("blindly handling any error")
+                logging.error("\n")
                 raise
 
         if self.is_post_about('gravity falls', tags):
@@ -162,19 +173,19 @@ class MoringMarkBot(object):
                     submission_object.mark_as_nsfw()
 
             except praw.errors.AlreadySubmitted, e:
-                print('Error occurred')
-                print("Post already submitted")
+                logging.info('Error occurred')
+                logging.info("Post already submitted")
                 pass
             except praw.errors.APIException, e:
-                print "\n"
-                print "[ERROR]:", e
-                print "\n"
+                logging.error("\n")
+                logging.error("[ERROR]:", e)
+                logging.error("\n")
                 raise
             except Exception, e:
-                print "\n"
-                print "[ERROR]:", e
-                print "blindly handling any error"
-                print "\n"
+                logging.error("\n")
+                logging.error("[ERROR]:", e)
+                logging.error("blindly handling any error")
+                logging.error("\n")
                 raise
 
 
@@ -186,7 +197,7 @@ def get_from_environ(key):
 
 def main():
 
-    print('Starting MoringMarkBot')
+    logging.info('Starting MoringMarkBot')
     config_path = 'moringmarkbot.conf.example'
 
     with open(config_path) as config_file:
@@ -194,25 +205,27 @@ def main():
 
     for key in config:
         if config[key] == '':
-            print('Getting from environment')
+            logging.info('Getting from environment')
             config[key] = get_from_environ(key)
 
     moringmarkbot = MoringMarkBot(**config)
 
     while True:
+        logging.debug('Sleep for 1 second')
         time.sleep(1)
         try:
             new_post = moringmarkbot.get_new_post()
 
             if new_post:
-                print('We have a new post here!')
+                logging.info('We have a new post here!')
                 moringmarkbot.submit(**new_post)
             else:
+                logging.debug('Post already submitted')
                 pass
 
         except Exception:
             raise
-            print('Error occurred! %s', traceback.format_exc())
+            logging.error('Error occurred! %s', traceback.format_exc())
 
 
 if __name__ == '__main__':
