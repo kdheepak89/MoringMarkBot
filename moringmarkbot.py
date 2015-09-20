@@ -199,7 +199,6 @@ def main():
     moringmarkbot = MoringMarkBot(**config)
 
     while True:
-        print('Waiting 1 second')
         time.sleep(1)
         try:
             new_post = moringmarkbot.get_new_post()
@@ -208,7 +207,7 @@ def main():
                 print('We have a new post here!')
                 moringmarkbot.submit(**new_post)
             else:
-                print('Post already submitted')
+                pass
 
         except Exception:
             raise
