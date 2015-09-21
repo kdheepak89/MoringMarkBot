@@ -186,7 +186,7 @@ def main():
 
     for key in config:
         if config[key] == '':
-            logging.info('Getting from environment')
+            logging.info('Getting %s from environment', key)
             config[key] = get_from_environ(key)
 
     moringmarkbot = MoringMarkBot(**config)
