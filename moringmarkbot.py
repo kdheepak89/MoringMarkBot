@@ -194,6 +194,8 @@ def main():
     while True:
         logging.debug('Sleep for 1 second')
         time.sleep(1)
+        if int(time.strftime('%M')) + int(time.strftime('%S')) == 0:
+            logging.info("Sleeping")
         try:
             new_post = moringmarkbot.get_new_post()
 
