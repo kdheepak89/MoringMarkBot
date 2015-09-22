@@ -88,7 +88,8 @@ class MoringMarkBot(object):
             if check_tag in tag:
                 return(True)
             else:
-                return(False)
+                pass
+        return(False)
 
     def get_new_post(self):
         """
